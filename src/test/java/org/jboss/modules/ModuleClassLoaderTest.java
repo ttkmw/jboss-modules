@@ -206,8 +206,7 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
         try {
             Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
             // direct
-            assertNotNull(testClass.getResource("/file1.txt")); // translates to /file1.txt
-            assertNotNull(testClass.getResource("file2.txt")); // translates to /org/jboss/modules/test/file2.txt
+            assertNotNull(testClass.getResource("/META-INF/services/org.keycloak.storage.UserStorageProviderFactory")); // translates to /file1.txt
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             fail("Should have loaded local class");
