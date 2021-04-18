@@ -84,7 +84,7 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
                 TestResourceLoader.build()
                         .addClass(TestClass.class)
                         .addResources(getResource("manifest"))
-                        .addResources(getResource("META-INF/services"))
+//                        .addResources(getResource("META-INF/services"))
                         .create()
         ));
 
