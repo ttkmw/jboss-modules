@@ -28,6 +28,7 @@ import org.jboss.modules.util.TestResourceLoader;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -81,7 +82,7 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
         moduleWithCustomResourceBuilder.addResourceRoot(ResourceLoaderSpec.createResourceLoaderSpec(
                 TestResourceLoader.build()
                         .addClass(TestClass.class)
-                        .addResources(getResource("class-resources"))
+                        .addResources(getResource("META-INF/services"))
                         .create()
         ));
 
@@ -199,6 +200,12 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
     }
 
     @Test
+    public void testGetResource() throws Exception {
+        File resource = getResource("META-INF/services");
+        assertNotNull(resource);
+    }
+
+    @Test
     public void testCustomResourceLoad() throws Exception {
         final Module testModule = moduleLoader.loadModule(MODULE_WITH_CUSTOM_RESOURCE_ID);
         final ModuleClassLoader classLoader = testModule.getClassLoader();
@@ -206,7 +213,7 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
         try {
             Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
             // direct
-            assertNotNull(testClass.getResource("/META-INF/services/org.keycloak.storage.UserStorageProviderFactory")); // translates to /file1.txt
+            assertNotNull(testClass.getResource("/org.keycloak.storage.UserStorageProviderFactory")); // translates to /file1.txt
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             fail("Should have loaded local class");
