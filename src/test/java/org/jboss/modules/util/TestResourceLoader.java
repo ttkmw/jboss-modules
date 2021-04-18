@@ -70,7 +70,7 @@ public class TestResourceLoader extends AbstractResourceLoader {
 
     @Override
     public PackageSpec getPackageSpec(final String name) throws IOException {
-        return getPackageSpec(name, getManifest(), null);
+        return getPackageSpec(name, getManifest(), new URL("file", "", "/Users/junksound/opensource/jboss-modules/target/test-classes/"));
     }
 
     private Manifest getManifest() throws IOException {

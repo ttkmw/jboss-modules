@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -198,6 +199,12 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
         } catch (ClassNotFoundException e) {
             fail("Should have loaded local class");
         }
+    }
+
+    @Test
+    public void constructURL() throws MalformedURLException {
+        URL services = new URL("file", "", "/Users/junksound/opensource/jboss-modules/target/test-classes/META-INF/services");
+        assertNotNull(services);
     }
 
     @Test
