@@ -58,7 +58,6 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
     private static final ModuleIdentifier MODULE_WITH_FILTERED_EXPORT_ID = ModuleIdentifier.fromString("test-with-filtered-export");
     private static final ModuleIdentifier MODULE_WITH_FILTERED_IMPORT_ID = ModuleIdentifier.fromString("test-with-filtered-import");
     private static final ModuleIdentifier MODULE_WITH_FILTERED_DOUBLE_EXPORT_ID = ModuleIdentifier.fromString("test-with-filtered-double-export");
-    private static final ModuleIdentifier MODULE_WITH_CUSTOM_RESOURCE_ID = ModuleIdentifier.fromString("test-with-custom-resource");
 
     private TestModuleLoader moduleLoader;
 
@@ -78,21 +77,6 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
             .build());
         moduleWithContentBuilder.addDependency(DependencySpec.createLocalDependencySpec());
         moduleLoader.addModuleSpec(moduleWithContentBuilder.create());
-
-        final ModuleSpec.Builder moduleWithCustomResourceBuilder = ModuleSpec.build(MODULE_WITH_CUSTOM_RESOURCE_ID);
-        moduleWithCustomResourceBuilder.addResourceRoot(ResourceLoaderSpec.createResourceLoaderSpec(
-                TestResourceLoader.build()
-                        .addClass(TestClass.class)
-                        .addResources(getResource("manifest"))
-//                        .addResources(getResource("META-INF/services"))
-                        .create()
-        ));
-
-        moduleWithCustomResourceBuilder.addDependency(new ModuleDependencySpecBuilder()
-                .setName(MODULE_TO_IMPORT_ID.toString())
-                .build());
-        moduleWithCustomResourceBuilder.addDependency(DependencySpec.createLocalDependencySpec());
-        moduleLoader.addModuleSpec(moduleWithCustomResourceBuilder.create());
 
         final ModuleSpec.Builder moduleWithResourceBuilder = ModuleSpec.build(MODULE_WITH_RESOURCE_ID);
         moduleWithResourceBuilder.addResourceRoot(ResourceLoaderSpec.createResourceLoaderSpec(
@@ -197,33 +181,6 @@ public class ModuleClassLoaderTest extends AbstractModuleTestCase {
             Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
             assertNotNull(testClass);
         } catch (ClassNotFoundException e) {
-            fail("Should have loaded local class");
-        }
-    }
-
-    @Test
-    public void constructURL() throws MalformedURLException {
-        URL services = new URL("file", "", "/Users/junksound/opensource/jboss-modules/target/test-classes/META-INF/services");
-        assertNotNull(services);
-    }
-
-    @Test
-    public void testGetResource() throws Exception {
-        File resource = getResource("META-INF/services");
-        assertNotNull(resource);
-    }
-
-    @Test
-    public void testCustomResourceLoad() throws Exception {
-        final Module testModule = moduleLoader.loadModule(MODULE_WITH_CUSTOM_RESOURCE_ID);
-        final ModuleClassLoader classLoader = testModule.getClassLoader();
-
-        try {
-            Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
-            // direct
-            assertNotNull(testClass.getResource("/org.keycloak.storage.UserStorageProviderFactory")); // translates to /file1.txt
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
             fail("Should have loaded local class");
         }
     }
