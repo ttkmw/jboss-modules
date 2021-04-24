@@ -27,9 +27,21 @@ public class ModuleClassLoaderWithCustomSpecTest {
     }
 
     @Test
+    public void getPackage() {
+        Package aPackage = Package.getPackage("org.jboss.modules");
+        assertNotNull(aPackage);
+    }
+
+    @Test
     public void constructURL() throws MalformedURLException {
         URL services = new URL("file", "", "/Users/junksound/opensource/jboss-modules/target/test-classes/META-INF/services");
         assertNotNull(services);
+    }
+
+    @Test
+    public void localDependencySpec() {
+        DependencySpec localDependencySpec = DependencySpec.createLocalDependencySpec();
+        assertNotNull(localDependencySpec);
     }
 
     @Test
@@ -73,20 +85,20 @@ public class ModuleClassLoaderWithCustomSpecTest {
         }
     }
 
-    @Test
-    public void testCustomResourceLoad() throws Exception {
-        final Module testModule = moduleLoader.loadModule(MODULE_WITH_CUSTOM_RESOURCE_ID);
-        final ModuleClassLoader classLoader = testModule.getClassLoader();
-
-        try {
-            Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
-            // direct
-            URL resource = testClass.getResource("/org.keycloak.storage.UserStorageProviderFactory");
-            assertNotNull(resource); // translates to /file1.txt
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            fail("Should have loaded local class");
-        }
-    }
+//    @Test
+//    public void testCustomResourceLoad() throws Exception {
+//        final Module testModule = moduleLoader.loadModule(MODULE_WITH_CUSTOM_RESOURCE_ID);
+//        final ModuleClassLoader classLoader = testModule.getClassLoader();
+//
+//        try {
+//            Class<?> testClass = classLoader.loadClass("org.jboss.modules.test.TestClass");
+//            // direct
+//            URL resource = testClass.getResource("/org.keycloak.storage.UserStorageProviderFactory");
+//            assertNotNull(resource); // translates to /file1.txt
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//            fail("Should have loaded local class");
+//        }
+//    }
 
 }
