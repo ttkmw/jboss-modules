@@ -50,7 +50,8 @@ public class Util {
     }
 
     public static URL getResource(final Class<?> baseClass, final String path) throws Exception {
-        final URL url = baseClass.getClassLoader().getResource(path);
+        ClassLoader classLoader = baseClass.getClassLoader();
+        final URL url = classLoader.getResource(path);
         return url;
     }
 

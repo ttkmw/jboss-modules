@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
@@ -35,9 +36,14 @@ public class ModuleClassLoaderWithCustomSpecTest {
     }
 
     @Test
-    public void getResource() throws Exception {
-        File resource = Util.getResourceFile(ModuleClassLoaderWithCustomSpecTest.class, "manifest");
-        assertNotNull(resource);
+    public void getResourceFailWithLocalPath() {
+        assertThatThrownBy(() -> Util.getResourceFile(ModuleClassLoaderWithCustomSpecTest.class, "/Users/junksound/opensource/jboss-modules/src/test/java/org/jboss/modules/ttkmw/manifest"));
+    }
+
+    @Test
+    public void getResourceSucceedWithTargetAddress() throws Exception {
+        File manifest = Util.getResourceFile(ModuleClassLoaderWithCustomSpecTest.class, "manifest");
+        assertThat(manifest).isNotNull();
     }
 
     @Test
