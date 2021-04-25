@@ -2,21 +2,23 @@ package org.jboss.modules;
 
 import org.jboss.modules.test.ImportedClass;
 import org.jboss.modules.test.ImportedInterface;
-import org.jboss.modules.test.TestClass;
 import org.jboss.modules.util.TestModuleLoader;
 import org.jboss.modules.util.TestResourceLoader;
+import org.jboss.modules.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class ModuleClassLoaderWithCustomSpecTest {
 
-    private static final ModuleIdentifier MODULE_WITH_CUSTOM_RESOURCE_ID = ModuleIdentifier.fromString("test-with-custom-resource");
+    private static final ModuleIdentifier MODULE_WITH_CUSTOM_RESOURCE_ID = ModuleIdentifier.fromString("keycloak-test");
     private static final ModuleIdentifier MODULE_TO_IMPORT_ID = ModuleIdentifier.fromString("test-to-import");
 
     private TestModuleLoader moduleLoader;
@@ -27,9 +29,26 @@ public class ModuleClassLoaderWithCustomSpecTest {
     }
 
     @Test
+    public void getClassTest() {
+        assertThat(getClass()).isEqualTo(this.getClass());
+    }
+
+    @Test
+    public void getResource() throws Exception {
+        File resource = Util.getResourceFile(ModuleClassLoaderWithCustomSpecTest.class, "manifest");
+        assertNotNull(resource);
+    }
+
+    @Test
     public void getPackage() {
         Package aPackage = Package.getPackage("org.jboss.modules");
         assertNotNull(aPackage);
+    }
+
+    @Test
+    public void getManifest() throws Exception {
+        URL manifest = Util.getResource(ModuleClassLoaderWithCustomSpecTest.class, "manifest");
+        assertThat(manifest).isNotNull();
     }
 
     @Test
@@ -60,9 +79,8 @@ public class ModuleClassLoaderWithCustomSpecTest {
         final ModuleSpec.Builder moduleWithCustomResourceBuilder = ModuleSpec.build(MODULE_WITH_CUSTOM_RESOURCE_ID);
         moduleWithCustomResourceBuilder.addResourceRoot(ResourceLoaderSpec.createResourceLoaderSpec(
                 TestResourceLoader.build()
-                        .addClass(TestClass.class)
-//                        .addResources(getResource("manifest"))
-//                        .addResources(getResource("META-INF/services"))
+//                        .addClass(TestClass.class)
+                        .addResources(new File(Util.getResource(ModuleClassLoaderWithCustomSpecTest.class, "manifest").toURI()))
                         .create()
         ));
 
