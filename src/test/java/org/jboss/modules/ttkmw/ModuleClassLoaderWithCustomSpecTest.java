@@ -1,5 +1,6 @@
-package org.jboss.modules;
+package org.jboss.modules.ttkmw;
 
+import org.jboss.modules.*;
 import org.jboss.modules.test.ImportedClass;
 import org.jboss.modules.test.ImportedInterface;
 import org.jboss.modules.util.TestModuleLoader;
